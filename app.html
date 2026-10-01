@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<script src="js/gh-pages.js"></script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#F5F7FA" media="(prefers-color-scheme:light)">
+<meta name="theme-color" content="#0F1117" media="(prefers-color-scheme:dark)">
+<title>bilgi kaynağım — Uygulama</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+<script src="js/auth.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+<style>
+/* ── Popup yumuşak animasyon ── */
+.popup-ov { transition: opacity .3s cubic-bezier(.22,1,.36,1); }
+.popup-card {
+  transition: transform .35s cubic-bezier(.22,1,.36,1), opacity .3s cubic-bezier(.22,1,.36,1) !important;
+  transform: scale(.93) translateY(16px) !important;
+  opacity: 0 !important;
+}
+.popup-ov.vis .popup-card {
+  transform: scale(1) translateY(0) !important;
+  opacity: 1 !important;
+}
+/* macOS Studio teması */
+body.modern { --bg:#F0F2F7; --white:rgba(255,255,255,.72); --border:rgba(0,0,0,.06); }
+body.modern nav, body.modern .popup-card, body.modern .bilge-container {
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  background: rgba(255,255,255,.72) !important;
+  border: 1px solid rgba(255,255,255,.5) !important;
+}
+body.modern.dark { --bg:#1a1b2e; --white:rgba(30,32,48,.75); }
+body.modern.dark nav, body.modern.dark .popup-card, body.modern.dark .bilge-container {
+  background: rgba(30,32,48,.75) !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+}
+/* Ayarlar .s-nav active */
+.s-nav { display:block; width:100%; text-align:left; padding:9px 12px; border-radius:10px; font-size:13px; font-weight:500; color:var(--txt2); transition:all .15s; }
+.s-nav:hover { background:var(--bg2); color:var(--txt); }
+.s-nav.active { background:var(--acc-l); color:var(--acc); font-weight:600; }
+</style>
+<style>
+/* Popup yumusak animasyon */
+.popup-card {
+  transition: transform .4s cubic-bezier(.22,1,.36,1), opacity .3s cubic-bezier(.22,1,.36,1) !important;
+  transform: scale(.93) translateY(18px) !important;
+  opacity: 0 !important;
+}
+.popup-ov.vis .popup-card {
+  transform: scale(1) translateY(0) !important;
+  opacity: 1 !important;
+}
+.popup-ov {
+  transition: opacity .3s cubic-bezier(.22,1,.36,1) !important;
+}
+/* macOS Studio */
+body.modern { --bg:#EEF0F5; }
+body.modern nav,
+body.modern .popup-card,
+body.modern .bilge-container,
+body.modern .ob-card {
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  background: rgba(255,255,255,.75) !important;
+  border: 1px solid rgba(255,255,255,.6) !important;
+  box-shadow: 0 8px 40px rgba(0,0,0,.12) !important;
+}
+body.modern.dark { --bg:#13141f; }
+body.modern.dark nav,
+body.modern.dark .popup-card,
+body.modern.dark .bilge-container {
+  background: rgba(22,24,36,.8) !important;
+  border: 1px solid rgba(255,255,255,.07) !important;
+}
+/* s-nav butonlari */
+.s-nav { display:block;width:100%;text-align:left;padding:9px 12px;border-radius:10px;font-size:13px;font-weight:500;color:var(--txt2);transition:all .15s;border:none;background:none;cursor:pointer; }
+.s-nav:hover { background:var(--bg2);color:var(--txt); }
+.s-nav.active { background:var(--acc-l);color:var(--acc);font-weight:600; }
+</style>
+</head>
+<body>
+<!-- ONBOARDING -->
+<div class="onboarding" id="onboarding"><div class="ob-card"><div class="ob-prog" id="obProg" style="width:0%"></div>
+  <div class="ob-step active" id="ob-step-1"><span class="ob-emoji">👋</span><h2 class="ob-title">Merhaba! Adın nedir?</h2><p class="ob-sub">Seni tanımak istiyoruz.</p><div class="ob-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>Merak etme, sonra değiştirebilirsin.</div><input class="ob-input" type="text" id="obName" placeholder="Adını yaz..." maxlength="30" autocomplete="off"><div class="ob-actions"><button class="ob-btn ob-btn-p" id="obN1" disabled>Devam Et</button></div></div>
+  <div class="ob-step" id="ob-step-2"><span class="ob-emoji">🎓</span><h2 class="ob-title">Sen kimsin?</h2><p class="ob-sub">Sana en uygun içeriği gösterelim.</p><div class="ob-grid cols-2" id="obLevelGrid"><div class="ob-opt" data-level="ortaokul"><span>📚</span><b>Ortaokul</b><small>5-8. sınıf</small></div><div class="ob-opt" data-level="lise"><span>🏫</span><b>Lise</b><small>9-12. sınıf</small></div><div class="ob-opt" data-level="universite"><span>🎓</span><b>Üniversite</b><small>Lisans / Önlisans</small></div><div class="ob-opt" data-level="mezun"><span>📋</span><b>Mezun / Sınav</b><small>KPSS, YDS vb.</small></div></div><div class="ob-actions"><button class="ob-btn ob-btn-s" id="obB2">Geri</button><button class="ob-btn ob-btn-p" id="obN2" disabled>Devam Et</button></div></div>
+  <div class="ob-step" id="ob-step-3"><span class="ob-emoji" id="ob3Emoji">📖</span><h2 class="ob-title" id="ob3Title">Sınıfını seç</h2><p class="ob-sub" id="ob3Sub">Hangi sınıftasın?</p><div class="ob-scroll-list" id="obClassList"></div><div class="ob-actions"><button class="ob-btn ob-btn-s" id="obB3">Geri</button><button class="ob-btn ob-btn-p" id="obN3" disabled>Devam Et</button></div></div>
+  <div class="ob-step" id="ob-step-4"><span class="ob-emoji">📊</span><h2 class="ob-title">Kendini nasıl görüyorsun?</h2><p class="ob-sub">Sana uygun içerik önerelim.</p><div class="ob-grid cols-1" id="obSkillGrid"><div class="ob-opt" data-skill="beginner" style="flex-direction:row;text-align:left;gap:12px"><span>🌱</span><div><b>Başlangıç</b><br><small>Temelden başlamalıyım</small></div></div><div class="ob-opt" data-skill="developing" style="flex-direction:row;text-align:left;gap:12px"><span>📈</span><div><b>Gelişiyor</b><br><small>Bazı konularda zorlanıyorum</small></div></div><div class="ob-opt" data-skill="good" style="flex-direction:row;text-align:left;gap:12px"><span>💪</span><div><b>İyi</b><br><small>Çoğu konuya hakimim</small></div></div><div class="ob-opt" data-skill="advanced" style="flex-direction:row;text-align:left;gap:12px"><span>🏆</span><div><b>İleri Seviye</b><br><small>Derece hedefliyorum</small></div></div></div><div class="ob-actions"><button class="ob-btn ob-btn-s" id="obB4">Geri</button><button class="ob-btn ob-btn-p" id="obN4" disabled>Devam Et</button></div></div>
+  <div class="ob-step" id="ob-step-5"><span class="ob-emoji">🎯</span><h2 class="ob-title">Hedefin nedir?</h2><p class="ob-sub">Birden fazla seçebilirsin.</p><div class="ob-grid cols-1" id="obGoalGrid"></div><div style="margin-top:12px"><label style="font-size:14px;font-weight:600;display:block;margin-bottom:8px">Hayalindeki meslek (opsiyonel)</label><input class="ob-input" type="text" id="obDreamJob" placeholder="ör: Doktor, Mühendis..." maxlength="50"></div><div class="ob-actions"><button class="ob-btn ob-btn-s" id="obB5">Geri</button><button class="ob-btn ob-btn-p" id="obN5">Devam Et</button></div></div>
+  <div class="ob-step" id="ob-step-6"><span class="ob-emoji">✅</span><h2 class="ob-title">Her şey hazır!</h2><p class="ob-sub">Dilediğin zaman değiştirebilirsin.</p><div id="obSummary"></div><div class="ob-actions"><button class="ob-btn ob-btn-s" id="obB6">Düzenle</button><button class="ob-btn ob-btn-p" id="obFinish">Başlayalım! 🚀</button></div></div>
+</div></div>
+
+<!-- APP -->
+<div class="app-shell" id="appShell">
+<nav>
+  <button class="nav-icon-btn" id="hamBtn" aria-label="Menü" style="display:none"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><line x1="1" y1="4" x2="15" y2="4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="8" x2="15" y2="8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="12" x2="15" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+  <a class="nav-logo" data-nav="feed">bilgi<span>kaynağım</span></a>
+  <div class="nav-tabs">
+    <button class="nav-tab active" data-nav="feed">Ana Sayfa</button>
+    <button class="nav-tab" data-mega="kesfet">Keşfet<svg class="chv" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+    <button class="nav-tab" data-mega="araclar">Araçlar<svg class="chv" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+    <button class="nav-tab" data-mega="sosyal">Sosyal<svg class="chv" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+    <button class="nav-tab nav-tab-group" id="navGroupBtn" data-nav="groups" style="display:none">👥 Grubum</button>
+    <button class="nav-tab nav-tab-bilge" data-nav="bilge">🧠 Bilge</button>
+  </div>
+  <div class="nav-search"><svg class="nav-search-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" placeholder="Ara..." id="searchInp"><span class="nav-search-kbd">⌘K</span></div>
+  <div class="nav-right">
+    <button class="nav-icon-btn" id="notifBtn" aria-label="Bildirimler"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M12 5.5a4 4 0 0 0-8 0c0 4.67-2 6-2 6h12s-2-1.33-2-6z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M9.15 13.5a1.33 1.33 0 0 1-2.3 0" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg><span class="notif-dot"></span></button>
+    <button class="nav-icon-btn" id="settingsBtn" aria-label="Ayarlar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+    <div class="nav-profile" id="profileBtn"><div class="nav-avatar" id="navAvatar">?</div><span class="nav-name" id="navName">—</span></div>
+  </div>
+</nav>
+
+<!-- MEGA MENUS -->
+<div class="mega-bd" id="megaBD"></div>
+<div class="mega" id="mega-kesfet"><div class="mega-in"><div class="mega-grp"><h3>Notlar</h3><div class="mega-link" data-nav="feed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg><div class="mega-link-col"><span>Not Akışı</span><span>En yeni notlar</span></div></div><div class="mega-link" data-nav="uni-notes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg><div class="mega-link-col"><span>Üniversite Notları</span></div></div><div class="mega-link" data-nav="archive"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg><div class="mega-link-col"><span>Akademik Arşiv</span></div></div></div><div class="mega-grp"><h3>Sınavlar</h3><div class="mega-link" data-nav="exams"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><div class="mega-link-col"><span>Ana Sınavlar</span><span>YKS, KPSS, YDS, MSÜ</span></div></div></div></div></div>
+<div class="mega" id="mega-araclar"><div class="mega-in"><div class="mega-grp"><h3>Çalışma</h3><div class="mega-link" data-nav="study"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><div class="mega-link-col"><span>Bugün Ne Çalışayım?</span></div></div><div class="mega-link" data-nav="tasks"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/></svg><div class="mega-link-col"><span>Görevler</span></div></div><div class="mega-link" data-nav="homework"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/></svg><div class="mega-link-col"><span>Ödevler</span></div></div><div class="mega-link" data-nav="goals"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="2"/></svg><div class="mega-link-col"><span>Hedefler</span></div></div></div><div class="mega-grp"><h3>Takip</h3><div class="mega-link" data-nav="nets"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg><div class="mega-link-col"><span>Netlerim</span></div></div><div class="mega-link" data-nav="progress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><div class="mega-link-col"><span>Gelişim Takibi</span></div></div><div class="mega-link" data-nav="calendar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg><div class="mega-link-col"><span>Takvim</span></div></div></div><div class="mega-grp"><h3>Kişisel</h3><div class="mega-link" data-nav="my-notes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg><div class="mega-link-col"><span>Kendi Alanım</span></div></div></div></div></div>
+<div class="mega" id="mega-sosyal"><div class="mega-in"><div class="mega-grp"><h3>Topluluk</h3><div class="mega-link" data-nav="groups"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><div class="mega-link-col"><span>Grup / Sınıfım</span></div></div><div class="mega-link" data-nav="qa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><div class="mega-link-col"><span>Soru Cevap</span></div></div><div class="mega-link" data-nav="request"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg><div class="mega-link-col"><span>Not İste</span></div></div></div></div></div>
+
+<!-- MOBILE DRAWER -->
+<div class="mob-ov" id="mobOverlay"><div class="mob-drawer"><div class="mob-hdr"><div class="nav-avatar" style="width:28px;height:28px;font-size:10px" id="mobAvatar">?</div><span style="font-family:var(--fh);font-weight:800;font-size:15px">bilgi<span style="color:var(--acc)">kaynağım</span></span></div>
+  <div class="mob-sec"><div class="mob-sec-title">Ana</div><div class="mob-item active" data-nav="feed">🏠 Ana Sayfa</div><div class="mob-item" data-nav="bilge">🧠 Bilge AI</div><div class="mob-item" data-nav="packages">💎 Paketler</div></div>
+  <div class="mob-sec"><div class="mob-sec-title">Keşfet</div><div class="mob-item" data-nav="qa">💬 Soru Cevap</div><div class="mob-item" data-nav="request">➕ Not İste</div><div class="mob-item" data-nav="archive">📁 Arşiv</div></div>
+  <div class="mob-sec"><div class="mob-sec-title">Araçlar</div><div class="mob-item" data-nav="study">🧭 Bugün Ne Çalışayım?</div><div class="mob-item" data-nav="tasks">✅ Görevler</div><div class="mob-item" data-nav="homework">📚 Ödevler</div><div class="mob-item" data-nav="goals">🎯 Hedefler</div><div class="mob-item" data-nav="nets">📊 Netlerim</div><div class="mob-item" data-nav="progress">📈 Gelişim</div><div class="mob-item" data-nav="calendar">📅 Takvim</div><div class="mob-item" data-nav="my-notes">✏️ Kendi Alanım</div></div>
+</div></div>
+
+<!-- CONTENT -->
+<main class="content" id="contentArea">
+  <!-- FEED -->
+  <section class="page-section active" id="page-feed">
+    <div id="dashWelcome"></div><div id="examCountdown"></div>
+    <div style="margin-bottom:24px"><h2 style="font-family:var(--fh);font-size:clamp(22px,3vw,28px);font-weight:800;letter-spacing:-.5px" id="greeting">Merhaba!</h2><p style="font-size:14px;color:var(--txt2)" id="feedSub"></p></div>
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-ic blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg></div><div class="stat-val">48</div><div class="stat-lbl">Toplam Not</div></div>
+      <div class="stat-card"><div class="stat-ic green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/></svg></div><div class="stat-val">12/17</div><div class="stat-lbl">Haftalık Görev</div></div>
+      <div class="stat-card"><div class="stat-ic orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div class="stat-val">7 gün</div><div class="stat-lbl">Aktif Seri</div></div>
+      <div class="stat-card"><div class="stat-ic gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div class="stat-val">0</div><div class="stat-lbl">Toplam XP</div></div>
+    </div>
+    <div class="feed-bar"><div class="feed-tabs"><button class="feed-tab active" data-f="all">Tümü</button><button class="feed-tab" data-f="popular">Popüler</button><button class="feed-tab" data-f="recent">Yeni</button></div><div class="feed-filters"><button class="filter-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>Ders</button></div></div>
+    <div class="note-grid" id="noteGrid"></div>
+  </section>
+
+  <!-- BILGE AI -->
+  <section class="page-section" id="page-bilge">
+    <div class="bilge-page-header">
+      <div><h2 class="bilge-page-title">🧠 Bilge</h2><p style="font-size:14px;color:var(--txt2)">Eğitim asistanın — ders, soru, plan, motivasyon</p></div>
+      <div class="bilge-header-right">
+        <div class="bilge-modes"><button class="bilge-mode-btn active" data-mode="friendly" title="Samimi">😊</button><button class="bilge-mode-btn" data-mode="serious" title="Ciddi">🎓</button><button class="bilge-mode-btn" data-mode="funny" title="Eğlenceli">😄</button></div>
+        <span id="bilgeCreditBadge" class="bilge-credit-badge">⚡ --/--</span>
+      </div>
+    </div>
+    <div class="bilge-container">
+      <div class="bilge-header"><div class="bilge-header-left"><div class="bilge-av">🧠</div><div><div class="bilge-title">Bilge</div><div id="bilgeStatus">Çevrimiçi</div></div></div><div style="display:flex;gap:6px"><span class="bilge-mem-badge" title="Bilge bilgilerini hatırlar">🧠 Hafıza</span><button class="filter-btn" id="bilgeClearBtn" style="font-size:12px">Temizle</button></div></div>
+      <div class="bilge-body" id="bilgeChatBody">
+        <div class="bilge-welcome" id="bilgeWelcome"><div style="font-size:48px">🧠</div><h3>Merhaba! Ben Bilge.</h3><p>Ders anlatımı, soru çözümü, çalışma planı ve motivasyon — ne istersen sor.</p><p style="font-size:12px;color:var(--txt3);margin-top:4px">🧠 Söylediğin netleri ve bilgileri hatırlarım!</p><div class="bilge-quick"><button class="bilge-qbtn" data-p="Bugün ne çalışmalıyım?">📚 Bugün ne çalışayım?</button><button class="bilge-qbtn" data-p="Bana kısa bir motivasyon ver.">💪 Motivasyon ver</button><button class="bilge-qbtn" data-p="Matematik konularını baştan anlat.">🔢 Matematik anlat</button><button class="bilge-qbtn" data-p="Haftalık çalışma programı oluştur.">📅 Çalışma planı</button></div></div>
+      </div>
+      <div class="bilge-input-area"><div class="bilge-input-wrap"><textarea class="bilge-input" id="bilgeInput" placeholder="Bilge'ye bir şey sor..." rows="1"></textarea><button class="bilge-send" id="bilgeSendBtn" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button></div><div class="bilge-disclaimer">Bilge hata yapabilir. Önemli bilgileri doğrulayın.</div></div>
+    </div>
+  </section>
+
+  <!-- PACKAGES -->
+  <section class="page-section" id="page-packages"><div id="packagesContent"></div></section>
+
+  <!-- PLACEHOLDERS → Dynamic content -->
+  <section class="page-section" id="page-qa"></section>
+  <section class="page-section" id="page-request"></section>
+  <section class="page-section" id="page-uni-notes"><div class="placeholder-page"><div class="ph-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg></div><h2 class="ph-title">Üniversite Notları</h2><p class="ph-desc">Yakında — üniversite ders notları burada olacak.</p></div></section>
+  <section class="page-section" id="page-archive"><div class="placeholder-page"><div class="ph-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></div><h2 class="ph-title">Akademik Arşiv</h2><p class="ph-desc">Yakında — kapsamlı arşiv hazırlanıyor.</p></div></section>
+  <section class="page-section" id="page-groups"></section>
+  <section class="page-section" id="page-my-notes"></section>
+  <section class="page-section" id="page-tasks"></section>
+  <section class="page-section" id="page-goals"></section>
+  <section class="page-section" id="page-study"></section>
+  <section class="page-section" id="page-calendar"></section>
+  <section class="page-section" id="page-progress"></section>
+  <section class="page-section" id="page-nets"></section>
+  <section class="page-section" id="page-homework"></section>
+  <section class="page-section" id="page-exams"><div class="placeholder-page"><div class="ph-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><h2 class="ph-title">Ana Sınavlar</h2><p class="ph-desc">Yakında — YKS, KPSS, YDS tek çatı altında.</p></div></section>
+  <section class="page-section" id="page-leaderboard"></section>
+</main>
+</div>
+
+<!-- POPUPS -->
+<div class="popup-ov" id="profilePopup"><div class="popup-card"><div class="popup-hdr"><h2>Profilim</h2><button class="popup-close" data-close="profilePopup">✕</button></div><div class="popup-body" id="profileBody"></div></div></div>
+<div class="popup-ov" id="settingsPopup"><div class="popup-card" style="max-width:600px;max-height:80vh;display:flex;flex-direction:column"><div class="popup-hdr" style="flex-shrink:0"><h2>⚙️ Ayarlar</h2><button class="popup-close" data-close="settingsPopup">✕</button></div>
+  <div style="display:flex;flex:1;min-height:0;overflow:hidden">
+    <div style="width:140px;flex-shrink:0;border-right:1px solid var(--border);padding:8px;overflow-y:auto;display:flex;flex-direction:column;gap:2px">
+      <button class="s-nav active" data-s="profile">👤 Profil</button>
+      <button class="s-nav" data-s="appearance">🎨 Görünüm</button>
+      <button class="s-nav" data-s="advanced">✨ Gelişmiş</button>
+      <button class="s-nav" data-s="notif">🔔 Bildirimler</button>
+      <button class="s-nav" data-s="privacy">🔒 Gizlilik</button>
+      <button class="s-nav" data-s="data">📦 Veri</button>
+      <button class="s-nav" data-s="account">🚪 Hesap</button>
+    </div>
+    <div style="flex:1;overflow-y:auto;padding:20px">
+
+    <!-- PROFIL -->
+    <div class="s-sec active" id="stab-profile">
+      <div class="s-grp"><div class="s-grp-title">Profil Bilgileri</div>
+        <div class="s-row"><div style="flex:1"><div class="s-lbl">İsim</div><div class="s-desc">Diğer kullanıcılara görünen ismin</div></div><div style="display:flex;gap:8px;align-items:center"><span id="setNameDisplay" style="font-size:13px;font-weight:500"></span><button class="filter-btn" style="font-size:11px;padding:5px 12px" id="setNameBtn">Değiştir</button></div></div>
+        <div class="s-row"><div style="flex:1"><div class="s-lbl">Seviye / Sınıf</div><div class="s-desc">Onboarding'de seçtiğin ayarlar</div></div><div style="display:flex;gap:8px;align-items:center"><span id="setLevelDisplay" style="font-size:13px;font-weight:500"></span><button class="filter-btn" style="font-size:11px;padding:5px 12px" id="resetOB">Düzenle</button></div></div>
+        <div class="s-row"><div style="flex:1"><div class="s-lbl">Avatar Rengi</div></div><div style="display:flex;gap:6px" id="setAvatarColors"></div></div>
+      </div>
+      <div class="s-grp"><div class="s-grp-title">Abonelik Durumu</div><div id="setSubInfo"></div></div>
+    </div>
+
+    <!-- GÖRÜNÜM + GELİŞMİŞ -->
+    <div class="s-sec" id="stab-appearance">
+      <div class="s-grp"><div class="s-grp-title">Tema</div>
+        <div class="s-row"><div style="flex:1"><div class="s-lbl">Koyu Tema</div><div class="s-desc">Göz yorgunluğunu azaltır</div></div><div class="tog" id="setThemeTog"></div></div>
+      </div>
+      <div class="s-grp"><div class="s-grp-title">Başlangıç Sayfası</div>
+        <div class="s-row"><div style="flex:1"><div class="s-lbl">Uygulama açıldığında</div></div><select class="s-select" id="startPage" style="width:auto;min-width:120px"><option value="feed">Ana Sayfa</option><option value="bilge">Bilge AI</option><option value="tasks">Görevler</option><option value="study">Ne Çalışayım?</option><option value="homework">Ödevler</option><option value="nets">Netlerim</option></select></div>
+      </div>
+      <div class="s-grp"><div class="s-grp-title">Yazı Boyutu</div>
+        <div class="s-row"><div style="flex:1"><div class="s-lbl">Arayüz yazı boyutu</div></div><select class="s-select" id="setFontSize" style="width:auto;min-width:100px"><option value="normal">Normal</option><option value="large">Büyük</option><option value="small">Küçük</option></select></div>
+      </div>
+      <div class="s-grp"><div class="s-grp-title">Dil</div>
+        <div style="display:flex;gap:8px">
+          <div style="padding:12px;border-radius:var(--r);border:2px solid var(--acc-solid,var(--acc));text-align:center;flex:1;background:var(--acc-l)"><div style="font-size:18px">🇹🇷</div><div style="font-size:11px;font-weight:600;color:var(--acc-solid,var(--acc));margin-top:4px">Türkçe</div></div>
+          <div style="padding:12px;border-radius:var(--r);border:2px solid var(--border);text-align:center;flex:1;cursor:pointer" id="setEngBtn"><div style="font-size:18px">🇬🇧</div><div style="font-size:11px;margin-top:4px">English</div><div style="font-size:9px;color:var(--txt3)">Coming soon</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GELİŞMİŞ GÖRÜNÜM -->
+    <div class="s-sec" id="stab-advanced">
+      <div class="s-grp"><div class="s-grp-title">Görünüm Modu</div>
+        <div class="s-desc" style="margin-bottom:12px">Arayüz stilini değiştir. Seçtiğin tema anında uygulanır.</div>
+        <div style="display:flex;gap:10px" id="setThemeCards">
+          <div class="s-theme-card" data-viewtheme="classic" style="padding:16px;border-radius:16px;border:2px solid var(--acc-solid,var(--acc));text-align:center;flex:1;cursor:pointer;transition:all .2s;background:var(--acc-l)"><div style="font-size:28px;margin-bottom:6px">📘</div><div style="font-weight:700;font-size:13px">Klasik</div><div style="font-size:10px;color:var(--txt3);margin-top:4px">Temiz & sade</div><div style="font-size:9px;color:var(--acc-solid,var(--acc));font-weight:600;margin-top:6px">✓ Aktif</div></div>
+          <div class="s-theme-card" data-viewtheme="minimal" style="padding:16px;border-radius:16px;border:2px solid var(--border);text-align:center;flex:1;cursor:pointer;transition:all .2s;opacity:.5"><div style="font-size:28px;margin-bottom:6px">⬜</div><div style="font-weight:700;font-size:13px">Minimalist</div><div style="font-size:10px;color:var(--txt3);margin-top:4px">Yakında</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BİLDİRİMLER -->
+    <div class="s-sec" id="stab-notif">
+      <div class="s-grp"><div class="s-grp-title">Bildirim Tercihleri</div>
+        <div class="s-row"><div style="flex:1"><div class="s-lbl">Tüm bildirimler</div><div class="s-desc">Ana bildirim anahtarı</div></div><div class="tog on" data-k="notif-all"></div></div>
+        <div class="s-row"><div style="flex:1"><div class="s-lbl">Ödev hatırlatma</div><div class="s-desc">Teslim tarihi yaklaşınca</div></div><div class="tog on" data-k="notif-homework"></div></div>
+        <div class="s-row"><div style="flex:1"><div class="s-lbl">Görev hatırlatma</div><div class="s-desc">Günlük görev kontrolü</div></div><div class="tog on" data-k="notif-tasks"></div></div>
+        <div class="s-row"><div style="flex:1"><div class="s-lbl">Sınav geri sayımı</div><div class="s-desc">Sınav tarihi yaklaşınca</div></div><div class="tog on" data-k="notif-exam"></div></div>
+        <div class="s-row"><div style="flex:1"><div class="s-lbl">Grup mesajları</div><div class="s-desc">Grupta yeni mesaj olunca</div></div><div class="tog on" data-k="notif-group"></div></div>
+      </div>
+    </div>
+
+    <!-- GİZLİLİK -->
+    <div class="s-sec" id="stab-privacy">
+      <div class="s-grp"><div class="s-grp-title">Profil Gizliliği</div>
+        <div class="s-row"><div style="flex:1"><div class="s-lbl">Profilim herkese açık</div><div class="s-desc">Diğer kullanıcılar profilini görebilir</div></div><div class="tog on" data-k="priv-profile"></div></div>
+        <div class="s-row"><div style="flex:1"><div class="s-lbl">İstatistiklerimi gizle</div><div class="s-desc">Liderlik tablosunda görünme</div></div><div class="tog" data-k="priv-stats"></div></div>
+      </div>
+      <div class="s-grp"><div class="s-grp-title">Güvenlik</div>
+        <div class="s-row"><div style="flex:1"><div class="s-lbl">Gizli Not PIN'i sıfırla</div><div class="s-desc">Kendi Alanım → Gizli bölüm</div></div><button class="filter-btn" style="font-size:11px;padding:5px 12px" id="setPinReset">Sıfırla</button></div>
+      </div>
+    </div>
+
+    <!-- VERİ -->
+    <div class="s-sec" id="stab-data">
+      <div class="s-grp"><div class="s-grp-title">Veri Sıfırlama</div>
+        <div class="s-desc" style="margin-bottom:10px;color:#FF3B30">⚠️ Sıfırlanan veriler geri getirilemez</div>
+        <div class="s-row"><div style="flex:1"><div class="s-lbl">Görevleri sıfırla</div></div><button class="filter-btn s-reset-btn" data-reset="tasks" style="font-size:11px;padding:5px 12px">Sıfırla</button></div>
+        <div class="s-row"><div style="flex:1"><div class="s-lbl">Ödevleri sıfırla</div></div><button class="filter-btn s-reset-btn" data-reset="homework" style="font-size:11px;padding:5px 12px">Sıfırla</button></div>
+        <div class="s-row"><div style="flex:1"><div class="s-lbl">Netleri sıfırla</div></div><button class="filter-btn s-reset-btn" data-reset="mynets" style="font-size:11px;padding:5px 12px">Sıfırla</button></div>
+        <div class="s-row"><div style="flex:1"><div class="s-lbl">Hedefleri sıfırla</div></div><button class="filter-btn s-reset-btn" data-reset="mygoals" style="font-size:11px;padding:5px 12px">Sıfırla</button></div>
+        <div class="s-row"><div style="flex:1"><div class="s-lbl">Kendi Alanım sıfırla</div></div><button class="filter-btn s-reset-btn" data-reset="my_space" style="font-size:11px;padding:5px 12px">Sıfırla</button></div>
+        <div class="s-row" style="margin-top:10px;padding-top:12px;border-top:2px solid var(--border)"><div style="flex:1"><div class="s-lbl" style="color:#FF3B30;font-weight:700">TÜM verileri sıfırla</div><div class="s-desc">Her şeyi silip sıfırdan başla</div></div><button class="filter-btn" id="setResetAll" style="font-size:11px;padding:5px 12px;color:#FF3B30;border-color:#FF3B30">Tümünü Sıfırla</button></div>
+      </div>
+      <div class="s-grp"><div class="s-grp-title">Tanıtım</div>
+        <div class="s-row"><div style="flex:1"><div class="s-lbl">Onboarding tekrarla</div><div class="s-desc">İlk giriş adımlarını tekrar gör</div></div><button class="filter-btn" style="font-size:11px;padding:5px 12px" id="resetOB2">Tekrarla</button></div>
+      </div>
+    </div>
+
+    <!-- HESAP -->
+    <div class="s-sec" id="stab-account">
+      <div class="s-grp"><div class="s-grp-title">Hesap</div>
+        <div class="s-row"><div style="flex:1"><div class="s-lbl">Çıkış Yap</div><div class="s-desc">Tüm oturum bilgileri silinir</div></div><button id="logoutBtn" style="padding:8px 18px;border-radius:var(--r);border:1.5px solid #FF3B30;color:#FF3B30;background:none;cursor:pointer;font-size:12px;font-weight:600">🚪 Çıkış Yap</button></div>
+      </div>
+      <div class="s-grp"><div class="s-grp-title">Hakkında</div>
+        <div style="text-align:center;padding:16px"><div style="font-family:var(--fh);font-size:18px;font-weight:800">bilgi<span style="color:var(--acc)">kaynağım</span></div><div style="font-size:12px;color:var(--acc);margin-top:4px;font-weight:600">Sürüm v2.5</div><div style="font-size:11px;color:var(--txt3);margin-top:4px">Mart 2026 · Türkiye'nin öğrenci platformu</div></div>
+      </div>
+    </div>
+
+    </div>
+  </div>
+</div></div>
+<div class="popup-ov" id="upgradePopup"><div class="popup-card" style="max-width:780px"><div class="popup-hdr"><h2>⚡ Paketi Yükselt</h2><button class="popup-close" data-close="upgradePopup">✕</button></div><div class="popup-body"><p id="upgradeReason" style="text-align:center;margin-bottom:20px;color:var(--txt2)"></p><div id="upgradeTiers"></div></div></div></div>
+<div class="popup-ov" id="goldenPopup"><div class="popup-card" style="max-width:440px"><div class="popup-body gt-body"><div style="font-size:64px">🎫✨</div><h3>Altın Bilet!</h3><p>Tebrikler! Rastgele Altın Bilet sana çıktı.<br><b>1 Aylık Pro</b> hesabını aktifleştirmek için Instagram Story'nde paylaş.</p><button class="gt-share" id="goldClaim">📸 Paylaş ve Kazan</button><br><button class="gt-skip" id="goldSkip">Şimdi değil</button></div></div></div>
+
+<div class="toast-c" id="toastC"></div>
+
+<!-- SCRIPTS -->
+<script>
+/* index.html'de kayıt olurken girilen ad, onboarding'in ilk
+   adımına önceden dolduruluyor ki kullanıcı adını iki kez yazmasın. */
+(function(){
+  try{
+    var a = JSON.parse(localStorage.getItem('bk_auth') || 'null');
+    var i = document.querySelector('#obName');
+    if (a && a.name && i && !i.value) i.value = a.name;
+  }catch(e){}
+})();
+</script>
+<script src="js/bundle.js"></script>
+<script src="js/macos.js"></script>
+</body>
+</html>

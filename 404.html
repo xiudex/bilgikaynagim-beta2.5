@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(){
+  var p=location.pathname||"/";
+  if(p.length>1&&!p.endsWith("/")&&!/\.[a-z0-9]+$/i.test(p)){
+    location.replace(p+"/"+location.search+location.hash);
+    return;
+  }
+  if(/\.github\.io$/i.test(location.hostname)){
+    var parts=p.split("/").filter(Boolean);
+    if(parts.length){
+      var b=document.createElement("base");
+      b.href=location.origin+"/"+parts[0]+"/";
+      document.head.insertBefore(b,document.head.firstChild);
+    }
+  }
+})();
+</script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#F5F7FA" media="(prefers-color-scheme:light)">
+<meta name="theme-color" content="#0F1117" media="(prefers-color-scheme:dark)">
+<title>bilgi kaynağım — Türkiye'nin Öğrenci Platformu</title>
+<meta name="description" content="Notlar, ödevler, Bilge AI ve sınıf grupların — hepsi tek yerde. bilgi kaynağım'a ücretsiz katıl.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23007AFF'/><text x='50' y='68' text-anchor='middle' font-size='58' font-weight='800' font-family='sans-serif' fill='white'>b</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+<style>
+/* ═══════════════════════════════════════
+   index.html — Giriş / Kayıt + Tanıtım
+   app.css içindeki değişkenleri (--acc, --fh, --r, vb.)
+   ve .tier-card / .ob-input / .ob-btn / .filter-btn
+   sınıflarını doğrudan kullanır, marka bütünlüğü içindir.
+   ═══════════════════════════════════════ */
+*{box-sizing:border-box}
+body{margin:0}
+.lp-nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:24px;padding:16px clamp(16px,5vw,64px);background:var(--white);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.lp-nav-links{display:flex;gap:22px;margin-left:8px}
+.lp-nav-links a{font-size:13px;font-weight:500;color:var(--txt2);transition:color .25s var(--ease)}
+.lp-nav-links a:hover{color:var(--txt)}
+.lp-nav-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.lp-btn-ghost{padding:9px 18px;border-radius:50px;font-size:13px;font-weight:600;color:var(--txt);background:none;border:1.5px solid var(--border);cursor:pointer;transition:border-color .25s var(--ease)}
+.lp-btn-ghost:hover{border-color:var(--acc)}
+.lp-btn-solid{padding:9px 20px;border-radius:50px;font-size:13px;font-weight:600;color:#fff;background:var(--acc);border:none;cursor:pointer;box-shadow:0 4px 16px rgba(0,122,255,.22);transition:background .3s var(--ease),transform .3s var(--ease),box-shadow .3s var(--ease)}
+.lp-btn-solid:hover{background:var(--acc2);transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,122,255,.28)}
+.lp-hero{max-width:1180px;margin:0 auto;padding:clamp(32px,7vw,88px) clamp(16px,5vw,64px) 40px;display:grid;grid-template-columns:1.15fr 1fr;gap:clamp(28px,5vw,56px);align-items:start;animation:lpRise .6s var(--ease)}
+.lp-eyebrow{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:50px;background:var(--acc-l);color:var(--acc);font-size:12px;font-weight:700;margin-bottom:20px}
+.lp-h1{font-family:var(--fh);font-size:clamp(28px,4.6vw,50px);font-weight:800;letter-spacing:-1.2px;line-height:1.1;margin-bottom:18px}
+.lp-h1 em{font-style:normal;color:var(--acc)}
+.lp-sub{font-size:16px;color:var(--txt2);line-height:1.65;max-width:480px;margin-bottom:28px}
+.lp-cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:36px}
+.lp-cta-row .lp-btn-solid{padding:13px 26px;font-size:14px}
+.lp-cta-row .lp-btn-ghost{padding:13px 22px;font-size:14px}
+.lp-stat-row{display:flex;gap:28px;flex-wrap:wrap;row-gap:16px}
+.lp-stat b{display:block;font-family:var(--fh);font-size:22px;font-weight:800;color:var(--txt)}
+.lp-stat span{font-size:12px;color:var(--txt3)}
+.lp-quote{font-family:var(--fc);font-size:18px;color:var(--acc);margin-top:28px;font-style:italic}
+@keyframes lpRise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* AUTH CARD */
+.auth-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r3);box-shadow:var(--sh-md);padding:32px;position:sticky;top:96px}
+.auth-tabs{display:flex;background:var(--bg2);border-radius:50px;padding:4px;margin-bottom:24px}
+.auth-tab{flex:1;text-align:center;padding:10px 0;border-radius:50px;font-size:13px;font-weight:600;color:var(--txt2);cursor:pointer;transition:all .3s var(--ease)}
+.auth-tab.active{background:var(--white);color:var(--txt);box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.auth-form{display:none}
+.auth-form.active{display:block;animation:lpFade .4s var(--ease)}
+@keyframes lpFade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.auth-lbl{font-size:12px;font-weight:600;color:var(--txt2);margin-bottom:6px;display:block}
+.auth-err{font-size:12px;color:var(--danger);margin:-10px 0 14px;display:none}
+.auth-err.vis{display:block;animation:lpFade .3s var(--ease)}
+.auth-or{display:flex;align-items:center;gap:10px;margin:18px 0;color:var(--txt3);font-size:12px}
+.auth-or::before,.auth-or::after{content:'';flex:1;height:1px;background:var(--border)}
+.auth-google{width:100%;height:46px;border-radius:var(--r);border:1.5px solid var(--border);background:var(--bg);display:flex;align-items:center;justify-content:center;gap:10px;font-size:13px;font-weight:600;color:var(--txt2);cursor:pointer;transition:border-color .25s var(--ease)}
+.auth-google:hover{border-color:var(--acc)}
+.auth-fine{font-size:11px;color:var(--txt3);text-align:center;margin-top:16px;line-height:1.6}
+.auth-fine a{color:var(--acc);font-weight:600}
+
+/* Şifre göster/gizle */
+.auth-pass-wrap{position:relative}
+.auth-pass-wrap .ob-input{padding-right:44px}
+.auth-eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:32px;height:32px;border:none;background:none;color:var(--txt3);display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:8px;transition:color .25s var(--ease),background .25s var(--ease)}
+.auth-eye:hover{color:var(--txt2);background:var(--bg2)}
+.auth-eye svg{width:18px;height:18px}
+
+/* Şifre gücü göstergesi */
+.auth-strength{display:none;align-items:center;gap:8px;margin:8px 0 4px}
+.auth-strength.vis{display:flex}
+.auth-strength-bar{flex:1;height:4px;border-radius:2px;background:var(--bg2);overflow:hidden}
+.auth-strength-bar span{display:block;height:100%;width:0%;border-radius:2px;transition:width .3s var(--ease),background .3s var(--ease)}
+.auth-strength-lbl{font-size:11px;font-weight:600;color:var(--txt3);white-space:nowrap}
+
+/* Şifremi unuttum */
+.auth-lbl-row{display:flex;align-items:center;justify-content:space-between}
+.auth-lbl-row .auth-lbl{margin-bottom:6px}
+.auth-forgot{font-size:11.5px;font-weight:600;color:var(--acc);margin-bottom:6px;transition:opacity .25s var(--ease)}
+.auth-forgot:hover{opacity:.7}
+
+/* Buton loading/disable durumu */
+.auth-submit{position:relative;display:flex;align-items:center;justify-content:center;gap:8px}
+.auth-submit:disabled{opacity:.75;cursor:default}
+.auth-spinner{display:none;width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;animation:authSpin .7s linear infinite}
+.auth-submit.loading .auth-btn-txt{opacity:.85}
+.auth-submit.loading .auth-spinner{display:inline-block}
+@keyframes authSpin{to{transform:rotate(360deg)}}
+
+/* FEATURES */
+.lp-section{max-width:1180px;margin:0 auto;padding:64px clamp(20px,5vw,64px)}
+.lp-section-hdr{text-align:center;max-width:560px;margin:0 auto 40px}
+.lp-section-eyebrow{font-size:12px;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px}
+.lp-h2{font-family:var(--fh);font-size:clamp(24px,3.4vw,34px);font-weight:800;letter-spacing:-.6px;margin-bottom:10px}
+.lp-section-sub{font-size:14px;color:var(--txt2);line-height:1.6}
+.lp-feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.lp-feat-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:24px;transition:transform .35s var(--ease),box-shadow .35s var(--ease),border-color .35s var(--ease)}
+.lp-feat-card:hover{transform:translateY(-2px);box-shadow:var(--sh);border-color:transparent}
+.lp-feat-ic{width:40px;height:40px;border-radius:12px;background:var(--acc-l);display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.lp-feat-ic svg{width:20px;height:20px;color:var(--acc)}
+.lp-feat-card h3{font-family:var(--fh);font-size:15px;font-weight:700;margin-bottom:6px;letter-spacing:-.2px}
+.lp-feat-card p{font-size:13px;color:var(--txt2);line-height:1.55}
+
+/* PRICING — mevcut .tiers-grid/.tier-card sınıfları kullanılıyor */
+.tier-card{cursor:default;transition:transform .35s var(--ease),box-shadow .35s var(--ease)}
+.tier-badge{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--warning);color:#fff;font-size:10px;font-weight:700;padding:4px 12px;border-radius:50px;white-space:nowrap}
+.tier-ic{width:34px;height:34px;border-radius:10px;background:var(--acc-l);display:flex;align-items:center;justify-content:center;margin:0 auto 8px}
+.tier-ic svg{width:17px;height:17px;color:var(--acc)}
+
+footer.lp-footer{border-top:1px solid var(--border);padding:32px clamp(16px,5vw,64px);text-align:center;color:var(--txt3);font-size:12px}
+footer.lp-footer b{color:var(--txt2)}
+
+@media(max-width:900px){.lp-hero{grid-template-columns:1fr}.auth-card{position:static;top:auto}}
+@media(max-width:640px){
+  .lp-nav-links{display:none}
+  .lp-nav{gap:12px;padding:14px 16px}
+  .lp-btn-ghost,.lp-btn-solid{padding:8px 14px;font-size:12.5px}
+  .lp-hero{padding-top:24px}
+  .lp-cta-row{gap:10px}
+  .lp-cta-row .lp-btn-solid,.lp-cta-row .lp-btn-ghost{flex:1;text-align:center;padding:13px 16px}
+  .lp-stat-row{gap:20px}
+  .auth-card{padding:22px}
+  .lp-section{padding:44px 16px}
+}
+@media(max-width:380px){
+  .lp-cta-row{flex-direction:column}
+  .lp-cta-row .lp-btn-solid,.lp-cta-row .lp-btn-ghost{width:100%}
+}
+</style>
+</head>
+<body>
+
+<nav class="lp-nav">
+  <a class="nav-logo" href="index.html">bilgi<span>kaynağım</span></a>
+  <div class="lp-nav-links">
+    <a href="#ozellikler">Özellikler</a>
+    <a href="#fiyatlandirma">Fiyatlandırma</a>
+  </div>
+  <div class="lp-nav-right">
+    <button class="lp-btn-ghost" id="navLoginBtn">Giriş Yap</button>
+    <button class="lp-btn-solid" id="navSignupBtn">Ücretsiz Başla</button>
+  </div>
+</nav>
+
+<section class="lp-hero">
+  <div>
+    <span class="lp-eyebrow">Türkiye'nin öğrenci platformu</span>
+    <h1 class="lp-h1">Ders çalışmanın <em>tek adresi</em> burada.</h1>
+    <p class="lp-sub">Notların, ödevlerin, netlerin ve sınıf grubun — hepsi tek çatı altında. Bilge AI ile ne çalışacağını sen değil, biz planlayalım.</p>
+    <div class="lp-cta-row">
+      <button class="lp-btn-solid" id="heroSignupBtn">Ücretsiz Hesap Oluştur</button>
+      <button class="lp-btn-ghost" id="heroLoginBtn">Zaten hesabım var</button>
+    </div>
+    <div class="lp-stat-row">
+      <div class="lp-stat"><b>10+</b><span>Ücretsiz AI kredisi/ay</span></div>
+      <div class="lp-stat"><b>YKS · KPSS · YDS</b><span>Tek çatı altında sınav takibi</span></div>
+      <div class="lp-stat"><b>Sınıf grupları</b><span>Notlarını arkadaşlarınla paylaş</span></div>
+    </div>
+    <p class="lp-quote">"Ne çalışacağını bilmemek, hiç çalışmamaktan beter."</p>
+  </div>
+
+  <div class="auth-card" id="authCard">
+    <div class="auth-tabs">
+      <div class="auth-tab active" data-tab="signup">Kayıt Ol</div>
+      <div class="auth-tab" data-tab="login">Giriş Yap</div>
+    </div>
+
+    <!-- KAYIT OL -->
+    <form class="auth-form active" id="signupForm" novalidate>
+      <label class="auth-lbl" for="suName">Ad Soyad</label>
+      <input class="ob-input" id="suName" type="text" placeholder="Adını yaz" maxlength="40" autocomplete="name">
+      <label class="auth-lbl" for="suEmail">E-posta</label>
+      <input class="ob-input" id="suEmail" type="email" placeholder="ornek@mail.com" autocomplete="email">
+      <label class="auth-lbl" for="suPass">Şifre</label>
+      <div class="auth-pass-wrap">
+        <input class="ob-input" id="suPass" type="password" placeholder="En az 6 karakter" autocomplete="new-password">
+        <button type="button" class="auth-eye" data-target="suPass" aria-label="Şifreyi göster">
+          <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+          <svg class="eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a18.7 18.7 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+        </button>
+      </div>
+      <div class="auth-strength" id="suStrength"><div class="auth-strength-bar"><span id="suStrengthFill"></span></div><span class="auth-strength-lbl" id="suStrengthLbl"></span></div>
+      <div class="auth-err" id="suErr"></div>
+      <button type="submit" class="ob-btn ob-btn-p auth-submit" id="suSubmitBtn" style="width:100%">
+        <span class="auth-btn-txt">Hesap Oluştur</span>
+        <span class="auth-spinner"></span>
+      </button>
+      <div class="auth-or">veya</div>
+      <button type="button" class="auth-google" id="suGoogleBtn">
+        <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.99.66-2.25 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.85A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.84 14.1a6.6 6.6 0 0 1 0-4.2V7.05H2.18a11 11 0 0 0 0 9.9z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1a11 11 0 0 0-9.82 6.05l3.66 2.85C6.71 7.31 9.14 5.38 12 5.38z"/></svg>
+        Google ile devam et
+      </button>
+      <p class="auth-fine">Kayıt olarak <a href="#">Kullanım Şartları</a>'nı kabul etmiş olursun.</p>
+    </form>
+
+    <!-- GİRİŞ YAP -->
+    <form class="auth-form" id="loginForm" novalidate>
+      <label class="auth-lbl" for="liEmail">E-posta</label>
+      <input class="ob-input" id="liEmail" type="email" placeholder="ornek@mail.com" autocomplete="email">
+      <div class="auth-lbl-row">
+        <label class="auth-lbl" for="liPass">Şifre</label>
+        <a href="#" class="auth-forgot" id="forgotBtn">Şifremi unuttum</a>
+      </div>
+      <div class="auth-pass-wrap">
+        <input class="ob-input" id="liPass" type="password" placeholder="Şifren" autocomplete="current-password">
+        <button type="button" class="auth-eye" data-target="liPass" aria-label="Şifreyi göster">
+          <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+          <svg class="eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a18.7 18.7 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+        </button>
+      </div>
+      <div class="auth-err" id="liErr"></div>
+      <button type="submit" class="ob-btn ob-btn-p auth-submit" id="liSubmitBtn" style="width:100%">
+        <span class="auth-btn-txt">Giriş Yap</span>
+        <span class="auth-spinner"></span>
+      </button>
+      <div class="auth-or">veya</div>
+      <button type="button" class="auth-google" id="liGoogleBtn">
+        <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.99.66-2.25 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.85A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.84 14.1a6.6 6.6 0 0 1 0-4.2V7.05H2.18a11 11 0 0 0 0 9.9z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1a11 11 0 0 0-9.82 6.05l3.66 2.85C6.71 7.31 9.14 5.38 12 5.38z"/></svg>
+        Google ile devam et
+      </button>
+    </form>
+  </div>
+</section>
+
+<section class="lp-section" id="ozellikler">
+  <div class="lp-section-hdr">
+    <div class="lp-section-eyebrow">Neler var?</div>
+    <h2 class="lp-h2">Tek uygulama, bütün ders hayatın</h2>
+    <p class="lp-section-sub">Ortaokuldan mezuniyete, her seviyeye uygun araçlar.</p>
+  </div>
+  <div class="lp-feat-grid">
+    <div class="lp-feat-card"><div class="lp-feat-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg></div><h3>Not Akışı</h3><p>Binlerce öğrencinin paylaştığı güncel ders notlarına anında ulaş.</p></div>
+    <div class="lp-feat-card"><div class="lp-feat-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><h3>Bilge AI</h3><p>"Bugün ne çalışayım?" sorusuna göre kişisel çalışma planı çıkarır.</p></div>
+    <div class="lp-feat-card"><div class="lp-feat-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/></svg></div><h3>Görevler &amp; Ödevler</h3><p>Teslim tarihlerini kaçırma, kanban görünümüyle ödevlerini takip et.</p></div>
+    <div class="lp-feat-card"><div class="lp-feat-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg></div><h3>Netlerim</h3><p>Deneme sonuçlarını gir, gelişimini grafiklerle izle.</p></div>
+    <div class="lp-feat-card"><div class="lp-feat-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><h3>Sınıf Grupları</h3><p>Sınıfınla aynı ortamda soru sor, not paylaş, birlikte çalış.</p></div>
+    <div class="lp-feat-card"><div class="lp-feat-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><h3>Sınav Takibi</h3><p>YKS, KPSS, YDS ve MSÜ için geri sayım ve hazırlık planı.</p></div>
+  </div>
+</section>
+
+<section class="lp-section" id="fiyatlandirma">
+  <div class="lp-section-hdr">
+    <div class="lp-section-eyebrow">Fiyatlandırma</div>
+    <h2 class="lp-h2">Sana uygun paketi seç</h2>
+    <p class="lp-section-sub">Ücretsiz başla, ihtiyacın olduğunda yükselt. İstediğin an iptal et.</p>
+  </div>
+  <div class="tiers-grid">
+    <div class="tier-card">
+      <div class="tier-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg></div><div class="tier-name">Temel</div><div class="tier-price">Ücretsiz</div>
+      <ul class="tier-feats"><li>10 AI Kredisi/ay</li><li>Günde max 5 mesaj</li><li>10 Kişisel Not</li><li>Temel not akışı</li></ul>
+      <button class="tier-btn-dis" data-plan-cta="signup">Ücretsiz Başla</button>
+    </div>
+    <div class="tier-card">
+      <div class="tier-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div><div class="tier-name">Başlangıç</div><div class="tier-price">₺49,90/ay</div>
+      <ul class="tier-feats"><li>75 AI Kredisi/ay</li><li>Günde max 15 mesaj</li><li>15 Kişisel Not</li><li>E-posta destek</li></ul>
+      <button class="tier-btn-up" data-plan-cta="signup">Hemen Başla</button>
+    </div>
+    <div class="tier-card tier-pop">
+      <div class="tier-badge">En Popüler</div>
+      <div class="tier-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><div class="tier-name">Pro</div><div class="tier-price">₺99,90/ay</div>
+      <ul class="tier-feats"><li>200 AI Kredisi/ay</li><li>Günde max 40 mesaj</li><li>Detaylı analiz</li><li>Öncelikli destek</li></ul>
+      <button class="tier-btn-up" data-plan-cta="signup">Hemen Başla</button>
+    </div>
+    <div class="tier-card">
+      <div class="tier-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 15 9 22 10 17 15 18 22 12 19 6 22 7 15 2 10 9 9 12 2z"/></svg></div><div class="tier-name">Ultra</div><div class="tier-price">₺179,90/ay</div>
+      <ul class="tier-feats"><li>500 AI Kredisi/ay</li><li>VIP sınav paketleri</li><li>7/24 destek</li><li>Erken erişim</li></ul>
+      <button class="tier-btn-up" data-plan-cta="signup">Hemen Başla</button>
+    </div>
+  </div>
+</section>
+
+<footer class="lp-footer">
+  <b>bilgi kaynağım</b> · Türkiye'nin öğrenci platformu · © 2026
+</footer>
+
+<div class="toast-c" id="toastC"></div>
+
+<script>
+(function(){
+  var $ = function(s){ return document.querySelector(s); };
+
+  /* Zaten giriş yapmışsa üstteki CTA'ları uygulamaya yönlendir */
+  var auth = null;
+  try { auth = JSON.parse(localStorage.getItem('bk_auth')); } catch(e){}
+  if (auth && auth.email) {
+    ['navLoginBtn','navSignupBtn','heroSignupBtn','heroLoginBtn'].forEach(function(id){
+      var b = document.getElementById(id);
+      if (b) { b.textContent = 'Uygulamaya Git →'; b.onclick = function(){ window.location.href = 'app.html'; }; }
+    });
+  }
+
+  /* Sekme geçişi */
+  function showTab(name){
+    document.querySelectorAll('.auth-tab').forEach(function(t){ t.classList.toggle('active', t.dataset.tab === name); });
+    document.querySelectorAll('.auth-form').forEach(function(f){ f.classList.remove('active'); });
+    var form = $('#' + (name === 'login' ? 'loginForm' : 'signupForm'));
+    form.classList.add('active');
+    var firstInput = form.querySelector('input');
+    if (firstInput) setTimeout(function(){ firstInput.focus(); }, 50);
+  }
+  document.querySelectorAll('.auth-tab').forEach(function(t){
+    t.addEventListener('click', function(){ showTab(t.dataset.tab); });
+  });
+  /* Sayfa açılınca ilk alana odaklan */
+  if (!(auth && auth.email)) {
+    var firstField = $('#suName');
+    if (firstField) setTimeout(function(){ firstField.focus(); }, 300);
+  }
+  if (!(auth && auth.email)) {
+    ['navLoginBtn','heroLoginBtn'].forEach(function(id){ var b=document.getElementById(id); if(b) b.onclick=function(){ showTab('login'); $('#authCard').scrollIntoView({behavior:'smooth',block:'center'}); }; });
+    ['navSignupBtn','heroSignupBtn'].forEach(function(id){ var b=document.getElementById(id); if(b) b.onclick=function(){ showTab('signup'); $('#authCard').scrollIntoView({behavior:'smooth',block:'center'}); }; });
+  }
+  document.querySelectorAll('[data-plan-cta]').forEach(function(b){
+    b.addEventListener('click', function(){
+      if (auth && auth.email) { window.location.href = 'app.html'; return; }
+      showTab('signup'); $('#authCard').scrollIntoView({behavior:'smooth',block:'center'});
+    });
+  });
+
+  /* ─────────────────────────────────────────
+     GEÇİCİ hesap sistemi — sadece frontend demo.
+     Şifreler burada düz metin olarak localStorage'da
+     tutuluyor. Gerçek alt yapı (Firebase Auth vb.)
+     bağlandığında BU BLOK TAMAMEN KALDIRILMALI.
+     ───────────────────────────────────────── */
+  function getUsers(){ try { return JSON.parse(localStorage.getItem('bk_users')) || []; } catch(e){ return []; } }
+  function setUsers(list){ localStorage.setItem('bk_users', JSON.stringify(list)); }
+  function showErr(id, msg){ var el = $(id); el.textContent = msg; el.classList.add('vis'); }
+  function clearErr(id){ var el = $(id); el.textContent = ''; el.classList.remove('vis'); }
+  function setLoading(btnId, on){
+    var b = $('#' + btnId);
+    if (!b) return;
+    b.disabled = on;
+    b.classList.toggle('loading', on);
+  }
+
+  /* Şifre göster / gizle */
+  document.querySelectorAll('.auth-eye').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var inp = document.getElementById(btn.dataset.target);
+      var isPass = inp.type === 'password';
+      inp.type = isPass ? 'text' : 'password';
+      btn.querySelector('.eye-open').style.display = isPass ? 'none' : '';
+      btn.querySelector('.eye-closed').style.display = isPass ? '' : 'none';
+      btn.setAttribute('aria-label', isPass ? 'Şifreyi gizle' : 'Şifreyi göster');
+    });
+  });
+
+  /* Şifre gücü göstergesi (sadece kayıt formunda) */
+  var suPass = $('#suPass'), suStrength = $('#suStrength'), suFill = $('#suStrengthFill'), suLbl = $('#suStrengthLbl');
+  suPass.addEventListener('input', function(){
+    var v = suPass.value;
+    if (!v) { suStrength.classList.remove('vis'); return; }
+    suStrength.classList.add('vis');
+    var score = 0;
+    if (v.length >= 6) score++;
+    if (v.length >= 10) score++;
+    if (/[A-Z]/.test(v) && /[a-z]/.test(v)) score++;
+    if (/[0-9]/.test(v)) score++;
+    if (/[^A-Za-z0-9]/.test(v)) score++;
+    var pct = [15,35,55,75,100][Math.min(score,4)];
+    var conf = [
+      { c: 'var(--danger)', l: 'Zayıf' },
+      { c: 'var(--danger)', l: 'Zayıf' },
+      { c: 'var(--warning)', l: 'Orta' },
+      { c: '#34C759', l: 'İyi' },
+      { c: '#34C759', l: 'Güçlü' }
+    ][Math.min(score,4)];
+    suFill.style.width = pct + '%';
+    suFill.style.background = conf.c;
+    suLbl.textContent = conf.l;
+    suLbl.style.color = conf.c;
+  });
+
+  /* Şifremi unuttum (arayüz — alt yapı bağlanınca aktif olacak) */
+  $('#forgotBtn').addEventListener('click', function(e){
+    e.preventDefault();
+    showToast('Şifre sıfırlama yakında aktif olacak.');
+  });
+  function showToast(msg){
+    var c = $('#toastC');
+    if (!c) { alert(msg); return; }
+    var t = document.createElement('div');
+    t.className = 'toast';
+    t.textContent = msg;
+    c.appendChild(t);
+    setTimeout(function(){ t.remove(); }, 3000);
+  }
+
+  $('#signupForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    clearErr('#suErr');
+    var name = $('#suName').value.trim();
+    var email = $('#suEmail').value.trim().toLowerCase();
+    var pass = $('#suPass').value;
+    if (name.length < 2) return showErr('#suErr', 'Adını yazmayı unuttun.');
+    if (!/^\S+@\S+\.\S+$/.test(email)) return showErr('#suErr', 'Geçerli bir e-posta gir.');
+    if (pass.length < 6) return showErr('#suErr', 'Şifre en az 6 karakter olmalı.');
+    var users = getUsers();
+    if (users.some(function(u){ return u.email === email; })) return showErr('#suErr', 'Bu e-posta zaten kayıtlı, giriş yapmayı dene.');
+    setLoading('suSubmitBtn', true);
+    users.push({ name: name, email: email, pass: pass });
+    setUsers(users);
+    localStorage.setItem('bk_auth', JSON.stringify({ name: name, email: email }));
+    /* Yeni kayıt — bu tarayıcıda daha önce başka bir hesap
+       onboarding'i tamamlamış olabilir. Yeni hesap için
+       onboarding ekranının mutlaka çıkması için bayrağı sıfırla. */
+    localStorage.removeItem('bk_onboarded');
+    setTimeout(function(){ window.location.href = 'app.html'; }, 350);
+  });
+
+  $('#loginForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    clearErr('#liErr');
+    var email = $('#liEmail').value.trim().toLowerCase();
+    var pass = $('#liPass').value;
+    var users = getUsers();
+    var match = users.find(function(u){ return u.email === email && u.pass === pass; });
+    if (!match) return showErr('#liErr', 'E-posta veya şifre hatalı.');
+    setLoading('liSubmitBtn', true);
+    localStorage.setItem('bk_auth', JSON.stringify({ name: match.name, email: match.email }));
+    setTimeout(function(){ window.location.href = 'app.html'; }, 350);
+  });
+
+  ['suGoogleBtn','liGoogleBtn'].forEach(function(id){
+    $('#' + id).addEventListener('click', function(){
+      alert('Google ile giriş yakında aktif olacak.');
+    });
+  });
+})();
+</script>
+</body>
+</html>
